@@ -1,0 +1,106 @@
+# Load necessary library
+library(dplyr)
+
+# Define the free cash flows (FCF) for the next 5 years
+fcf <- c(100, 110, 121, 133, 146)
+
+# Define the growth rate for terminal value and WACC
+g <- 0.03  # terminal growth rate
+wacc <- 0.15  # weighted average cost of capital
+
+# Calculate terminal value (TV) at the end of year 5
+terminal_value <- fcf[length(fcf)] * (1 + g) / (wacc - g)
+
+# Combine FCF and terminal value into one vector
+cash_flows <- c(fcf, terminal_value)
+
+# Calculate the present value of the cash flows
+years <- 0:(length(cash_flows) - 1)
+present_values <- cash_flows / (1 + wacc)^years
+
+# Calculate the enterprise value (EV)
+enterprise_value <- sum(present_values)
+
+# Adjust for net debt to get equity value
+net_debt <- 50  # assume the company has $50 million in net debt
+equity_value <- enterprise_value - net_debt
+
+# Number of shares outstanding
+shares_outstanding <- 10  # assume 10 million shares outstanding
+
+# Calculate intrinsic value per share
+intrinsic_value_per_share <- equity_value / shares_outstanding
+
+# Print the results
+print(paste("Enterprise Value: $", round(enterprise_value, 2), "million"))
+print(paste("Equity Value: $", round(equity_value, 2), "million"))
+print(paste("Intrinsic Value per Share: $", round(intrinsic_value_per_share, 2)))
+
+
+####################################### Looping   #########################################################################  
+
+# Load necessary library
+library(dplyr)
+
+# Define the forecast parameters
+initial_revenue <- 1000  # initial revenue in millions
+revenue_growth_rate <- 0.05  # annual revenue growth rate
+operating_margin <- 0.15  # operating margin (EBIT/Revenue)
+tax_rate <- 0.25  # tax rate
+capex_percentage <- 0.04  # percentage of revenue spent on CapEx
+change_in_wc_percentage <- 0.02  # percentage of revenue change in working capital
+wacc <- 0.1  # weighted average cost of capital
+terminal_growth_rate <- 0.03  # terminal growth rate
+
+# Forecast the next 5 years
+years <- 5
+revenue <- numeric(years)
+ebit <- numeric(years)
+taxes <- numeric(years)
+capex <- numeric(years)
+change_in_wc <- numeric(years)
+fcf <- numeric(years)
+
+for (i in 1:years) {
+  if (i == 1) {
+    revenue[i] <- initial_revenue * (1 + revenue_growth_rate)
+  } else {
+    revenue[i] <- revenue[i - 1] * (1 + revenue_growth_rate)
+  }
+  ebit[i] <- revenue[i] * operating_margin
+  taxes[i] <- ebit[i] * tax_rate
+  capex[i] <- revenue[i] * capex_percentage
+  if (i == 1) {
+    change_in_wc[i] <- revenue[i] * change_in_wc_percentage
+  } else {
+    change_in_wc[i] <- (revenue[i] - revenue[i - 1]) * change_in_wc_percentage
+  }
+  fcf[i] <- ebit[i] * (1 - tax_rate) - capex[i] - change_in_wc[i]
+}
+
+# Calculate terminal value (TV)
+terminal_value <- fcf[years] * (1 + terminal_growth_rate) / (wacc - terminal_growth_rate)
+
+# Combine FCF and terminal value into one vector
+cash_flows <- c(fcf, terminal_value)
+
+# Calculate the present value of the cash flows
+present_values <- cash_flows / (1 + wacc)^(0:years)
+
+# Calculate the enterprise value (EV)
+enterprise_value <- sum(present_values)
+
+# Adjust for net debt to get equity value
+net_debt <- 50  # assume the company has $50 million in net debt
+equity_value <- enterprise_value - net_debt
+
+# Number of shares outstanding
+shares_outstanding <- 10  # assume 10 million shares outstanding
+
+# Calculate intrinsic value per share
+intrinsic_value_per_share <- equity_value / shares_outstanding
+
+# Print the results
+print(paste("Enterprise Value: $", round(enterprise_value, 2), "million"))
+print(paste("Equity Value: $", round(equity_value, 2), "million"))
+print(paste("Intrinsic Value per Share: $", round(intrinsic_value_per_share, 2)))

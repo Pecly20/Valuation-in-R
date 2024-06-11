@@ -1,0 +1,38 @@
+#################### WACC  ###########################################################################################################
+
+
+
+# Load necessary library
+library(dplyr)
+
+# Define parameters for WACC calculation
+Rf <- 0.02  # risk-free rate (e.g., 2%)
+beta <- 1.2  # beta coefficient
+Rm <- 0.08  # expected market return (e.g., 8%)
+Rd_pre_tax <- 0.05  # pre-tax cost of debt (e.g., 5%)
+tax_rate <- 0.25  # tax rate (e.g., 25%)
+
+# Market values
+E <- 500  # market value of equity (e.g., $500 million)
+D <- 200  # market value of debt (e.g., $200 million)
+
+# Calculate cost of equity using CAPM
+Re <- Rf + beta * (Rm - Rf)
+
+# Calculate after-tax cost of debt
+Rd <- Rd_pre_tax * (1 - tax_rate)
+
+# Total market value of the company's financing
+V <- E + D
+
+# Calculate WACC
+WACC <- (E / V) * Re + (D / V) * Rd
+
+# Print the results
+print(paste("Cost of Equity (Re):", round(Re, 4)))
+print(paste("After-tax Cost of Debt (Rd):", round(Rd, 4)))
+print(paste("WACC:", round(WACC, 4)))
+
+
+
+
